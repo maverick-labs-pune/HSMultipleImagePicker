@@ -47,9 +47,16 @@ public class MainActivity extends AppCompatActivity {
         if(checkPermission() == PackageManager.PERMISSION_GRANTED) {
             int maxPhotos = 2;
             multiImagePicker = new MultiImagePicker.Builder(maxPhotos)
+                    // If your theme is NoActionBar or you are hiding the bar in your activity,
+                    // set this to true. Default is false.
+                    .showSeparateToolbar(true)
+
+                    //Receiver to get all the selected photos
                     .setOnReceiveListener(new MultiImagePickerListener() {
                         @Override
                         public void onImagesPicked(List<PickedPhoto> pickedPhotos) {
+                            //Get all the picked photos here . Type of photo is PickedPhoto
+
                             for(int i=0; i < pickedPhotos.size(); i++) {
                                 PickedPhoto photo = pickedPhotos.get(i);
                                 Log.d("TAG", " In main activity " + photo.getPhotoPath());

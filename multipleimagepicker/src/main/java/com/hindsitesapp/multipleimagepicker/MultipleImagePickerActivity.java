@@ -11,6 +11,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,16 +29,30 @@ public class MultipleImagePickerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_image_picker);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        toolbar.setTitle("Post to \"" + albumName + "\"");
-//        setSupportActionBar(toolbar);
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
+
         Bundle bundle = this.getIntent().getExtras();
         int maxPhotos = bundle.getInt("maxPhotos");
-        //listener = (MultiImagePickerListener) bundle.getSerializable("listener");
+        boolean showToolbar = bundle.getBoolean("showToolbar");
         listener = MultiImagePicker.imagePickerListener;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        if (showToolbar) {
+
+            toolbar.setTitle("Select folder");
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
+        } else {
+            toolbar.setVisibility(View.GONE);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle("Select folder");
+            }
+        }
+
+
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.image_grid);
         int GRID_SPAN = 2;
@@ -45,7 +61,7 @@ public class MultipleImagePickerActivity extends AppCompatActivity {
                 GridLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(gridLayoutManager);
-        folderRecyclerAdapter = new FolderRecyclerAdapter(getApplicationContext(), this, maxPhotos);
+        folderRecyclerAdapter = new FolderRecyclerAdapter(getApplicationContext(), this, maxPhotos, showToolbar);
         recyclerView.setAdapter(folderRecyclerAdapter);
         this.getSupportLoaderManager().initLoader(0, null, mLoaderCallback);
 

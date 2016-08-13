@@ -30,16 +30,19 @@ public class FolderRecyclerAdapter extends RecyclerView.Adapter<FolderRecyclerAd
     private Context mContext;
     private Activity activity;
     private int maxPhotos;
+    private boolean showToolbar;
 
     private List<Folder> mFolders = new ArrayList<>();
     private HashMap<Integer, GlideDrawableImageViewTarget> thumbnailHashMap = new HashMap<>();
 
 
-    public FolderRecyclerAdapter(Context context, Activity activity, int maxPhotos) {
+    public FolderRecyclerAdapter(Context context, Activity activity, int maxPhotos, boolean showToolbar) {
         super();
         mContext = context;
         this.activity = activity;
         this.maxPhotos = maxPhotos;
+        this.showToolbar = showToolbar;
+
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         float scale = displayMetrics.density;
         this.dimension = (displayMetrics.widthPixels - Math.round(8 * scale)) / 2;
@@ -97,6 +100,7 @@ public class FolderRecyclerAdapter extends RecyclerView.Adapter<FolderRecyclerAd
                     bundle.putString("path", folder.path);
                     bundle.putString("folderName", folder.name);
                     bundle.putInt("maxPhotos", maxPhotos);
+                    bundle.putBoolean("showToolbar", showToolbar);
                     intent.putExtra("pathBundle", bundle);
 
                     activity.startActivityForResult(intent, 0);

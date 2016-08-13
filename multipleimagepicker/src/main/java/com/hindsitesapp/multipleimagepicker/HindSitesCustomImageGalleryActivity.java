@@ -36,8 +36,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -63,6 +65,7 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
     private String path;
     private String folderName;
     public static int maxPhotos = 20;
+    private boolean showToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,22 +73,35 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             path = savedInstanceState.getString("path");
             folderName = savedInstanceState.getString("folderName");
-
+            showToolbar = savedInstanceState.getBoolean("showToolbar");
             selectedPhotoList = (List<PickedPhoto>) savedInstanceState.getSerializable("selectedPhotoList");
         } else {
             Bundle bundle = this.getIntent().getBundleExtra("pathBundle");
             path = bundle.getString("path");
             maxPhotos = bundle.getInt("maxPhotos");
+            showToolbar = bundle.getBoolean("showToolbar");
             folderName = bundle.getString("folderName");
             selectedPhotoList = new ArrayList<>();
         }
         setContentView(R.layout.activity_hindsites_custom_gallery);
-//        final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        toolbar.setTitle(getString(R.string.title_activity_hindsites_custom_image_gallery));
-//        setSupportActionBar(toolbar);
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        if(showToolbar) {
+
+            toolbar.setTitle("Select Photos");
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        } else {
+            toolbar.setVisibility(View.GONE);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle("Select Photos");
+            }
+        }
+
+
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.image_grid);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),
@@ -126,6 +142,9 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
 
         outState.putString("path", path);
         outState.putString("folderName", folderName);
+        outState.putInt("maxPhotos", maxPhotos);
+        outState.putBoolean("showToolbar", showToolbar);
+
         outState.putSerializable("selectedPhotoList", (Serializable) selectedPhotoList);
     }
 
