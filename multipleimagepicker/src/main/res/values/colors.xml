@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  /*************************************************************************
+  ~  *
+  ~  * MAVERICK LABS CONFIDENTIAL
+  ~  * __________________
+  ~  *
+  ~  *  [2015] Maverick Labs
+  ~  *  All Rights Reserved.
+  ~  *
+  ~  * NOTICE:  All information contained herein is, and remains
+  ~  * the property of Maverick Labs and its suppliers,
+  ~  * if any.  The intellectual and technical concepts contained
+  ~  * herein are proprietary to Maverick Labs
+  ~  * and its suppliers and may be covered by U.S. and Foreign Patents,
+  ~  * patents in process, and are protected by trade secret or copyright law.
+  ~  * Dissemination of this information or reproduction of this material
+  ~  * is strictly forbidden unless prior written permission is obtained
+  ~  * from Maverick Labs.
+  ~  */
+  -->
+
+<resources>
+    <color name="primary">#3f51b5</color>
+    <color name="dark_primary">#303F9F</color>
+    <color name="light_primary">#C5CAE9</color>
+    <color name="accent">#FF5252</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="divider_color">#E0E0E0</color>
+    <color name="secondary_light_text">#B3B3B3</color>
+
+    <color name="accent_pressed">#FF1744</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="link">#7986CB</color>
+    <color name="hs_primary_material_light">#fff5f5f5</color>
+
+
+    <color name="material_accent1">#FF5252</color>
+    <color name="material_accent2">#FF4081</color>
+    <color name="material_accent3">#E040FB</color>
+    <color name="material_accent4">#7C4DFF</color>
+    <color name="material_accent5">#448AFF</color>
+    <color name="material_accent6">#536DFE</color>
+    <color name="material_accent7">#009688</color>
+    <color name="material_accent8">#4CAF50</color>
+    <color name="material_accent9">#8BC34A</color>
+    <color name="material_accent10">#FF9800</color>
+    <color name="material_accent11">#FF5722</color>
+    <color name="placeholder_grey">#FFD3D3D3</color>
+    <color name="image_selected">#88D3D3D3</color>
+</resources>
