@@ -154,8 +154,8 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         if (selectedImages.get(pos, false)) {
             selectedImages.delete(pos);
         } else {
-            if(getSelectedItemCount() > HindSitesCustomImageGalleryActivity.MAX_PHOTO_COUNT){
-                Toast.makeText(mContext, "Maximum 20 photos can be selected", Toast.LENGTH_LONG).show();
+            if(getSelectedItemCount() >= HindSitesCustomImageGalleryActivity.maxPhotos){
+                Toast.makeText(mContext, "Maximum " + HindSitesCustomImageGalleryActivity.maxPhotos +" photos can be selected", Toast.LENGTH_LONG).show();
             } else {
                 selectedImages.put(pos, true);
             }

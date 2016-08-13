@@ -6,14 +6,14 @@ import java.io.Serializable;
  * Created by amoghpalnitkar on 8/13/16.
  */
 
-public class Photo implements Serializable {
+public class PickedPhoto implements Serializable {
 
         private String photoPath;
         private Double latitude;
         private Double longitude;
         private long clickedDateTime;
 
-        public Photo(double latitude, double longitude, String picturePath, long milliSeconds) {
+        public PickedPhoto(double latitude, double longitude, String picturePath, long milliSeconds) {
                 this.photoPath = picturePath;
                 this.latitude = latitude;
                 this.longitude = longitude;

@@ -29,16 +29,17 @@ public class FolderRecyclerAdapter extends RecyclerView.Adapter<FolderRecyclerAd
     private final int dimension;
     private Context mContext;
     private Activity activity;
+    private int maxPhotos;
 
     private List<Folder> mFolders = new ArrayList<>();
     private HashMap<Integer, GlideDrawableImageViewTarget> thumbnailHashMap = new HashMap<>();
 
 
-    public FolderRecyclerAdapter(Context context, Activity activity) {
+    public FolderRecyclerAdapter(Context context, Activity activity, int maxPhotos) {
         super();
         mContext = context;
         this.activity = activity;
-
+        this.maxPhotos = maxPhotos;
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         float scale = displayMetrics.density;
         this.dimension = (displayMetrics.widthPixels - Math.round(8 * scale)) / 2;
@@ -95,6 +96,7 @@ public class FolderRecyclerAdapter extends RecyclerView.Adapter<FolderRecyclerAd
                     Bundle bundle = new Bundle();
                     bundle.putString("path", folder.path);
                     bundle.putString("folderName", folder.name);
+                    bundle.putInt("maxPhotos", maxPhotos);
                     intent.putExtra("pathBundle", bundle);
 
                     activity.startActivityForResult(intent, 0);

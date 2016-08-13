@@ -2,40 +2,30 @@ package com.hindsitesapp.multipleimagepicker;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipleImagePicker extends AppCompatActivity {
+public class MultipleImagePickerActivity extends AppCompatActivity {
+
+    private MultiImagePickerListener listener;
 
     private ArrayList<Folder> folders = new ArrayList<>();
     private FolderRecyclerAdapter folderRecyclerAdapter;
-    private long albumID;
-    private String albumName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            albumID = savedInstanceState.getLong("albumID");
-            albumName = savedInstanceState.getString("albumName");
-        } else {
-            albumID = getIntent().getLongExtra("albumID", 0);
-            albumName = getIntent().getStringExtra("albumName");
-        }
         setContentView(R.layout.activity_multiple_image_picker);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 //        toolbar.setTitle("Post to \"" + albumName + "\"");
@@ -43,6 +33,10 @@ public class MultipleImagePicker extends AppCompatActivity {
 //        if (getSupportActionBar() != null) {
 //            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        }
+        Bundle bundle = this.getIntent().getExtras();
+        int maxPhotos = bundle.getInt("maxPhotos");
+        //listener = (MultiImagePickerListener) bundle.getSerializable("listener");
+        listener = MultiImagePicker.imagePickerListener;
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.image_grid);
         int GRID_SPAN = 2;
@@ -51,7 +45,7 @@ public class MultipleImagePicker extends AppCompatActivity {
                 GridLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(gridLayoutManager);
-        folderRecyclerAdapter = new FolderRecyclerAdapter(getApplicationContext(), this);
+        folderRecyclerAdapter = new FolderRecyclerAdapter(getApplicationContext(), this, maxPhotos);
         recyclerView.setAdapter(folderRecyclerAdapter);
         this.getSupportLoaderManager().initLoader(0, null, mLoaderCallback);
 
@@ -60,15 +54,12 @@ public class MultipleImagePicker extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("albumID", albumID);
-        outState.putString("albumName", albumName);
+
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        albumID = savedInstanceState.getLong("albumID");
-        albumName = savedInstanceState.getString("albumName");
 
     }
 
@@ -130,14 +121,11 @@ public class MultipleImagePicker extends AppCompatActivity {
         if (requestCode == 0 ) {
             if (resultCode == RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
-                    List<Photo> result = (List<Photo>) data.getExtras().getSerializable("photos");
+                    List<PickedPhoto> result = (List<PickedPhoto>) data.getExtras().getSerializable("photos");
                     // Create intent to deliver some kind of result data
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("photos", (Serializable) result);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
+                    listener.onImagesPicked(result);
                     finish();
+
                 }
 
 

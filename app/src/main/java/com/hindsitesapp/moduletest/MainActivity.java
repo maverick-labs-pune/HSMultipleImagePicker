@@ -9,14 +9,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.hindsitesapp.multipleimagepicker.MultipleImagePicker;
-import com.hindsitesapp.multipleimagepicker.Photo;
+import com.hindsitesapp.multipleimagepicker.MultiImagePicker;
+import com.hindsitesapp.multipleimagepicker.MultiImagePickerListener;
+import com.hindsitesapp.multipleimagepicker.OnRecyclerItemClickListener;
+import com.hindsitesapp.multipleimagepicker.PickedPhoto;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Button openGallery;
+    MultiImagePicker multiImagePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,33 +30,30 @@ public class MainActivity extends AppCompatActivity {
         openGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //MultipleImagePicker imagePicker = new MultipleImagePicker();
-                Intent intent = new Intent(getApplicationContext(), MultipleImagePicker.class);
+                selectPhotos();
 
-                startActivityForResult(intent, 0);
             }
         });
 
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 ) {
-            if (resultCode == RESULT_OK) {
-                List<Photo> result = (List<Photo>) data.getExtras().getSerializable("photos");
+    private void selectPhotos() {
 
-                if (result != null) {
-                    Log.d("TAG", " get activity result  " + result.size());
-                    for(int i=0; i < result.size(); i++) {
-                        Photo photo = result.get(i);
-                        Log.d("TAG", " " + photo.getPhotoPath());
+        int maxPhotos = 2;
+        multiImagePicker = new MultiImagePicker.Builder(maxPhotos)
+                .setOnReceiveListener(new MultiImagePickerListener() {
+                    @Override
+                    public void onImagesPicked(List<PickedPhoto> pickedPhotos) {
+                        for(int i=0; i < pickedPhotos.size(); i++) {
+                            PickedPhoto photo = pickedPhotos.get(i);
+                            Log.d("TAG", " In main activity " + photo.getPhotoPath());
 
+                        }
                     }
-                }
-
-            }
-        }
+                })
+                .build();
+        multiImagePicker.startActivity(getApplicationContext());
     }
 
     @Override

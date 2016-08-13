@@ -23,7 +23,6 @@
 
 package com.hindsitesapp.multipleimagepicker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -37,7 +36,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -45,7 +43,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,12 +56,13 @@ import java.util.Locale;
 public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
 
     private static final int GRID_SPAN = 3;
-    public static final int MAX_PHOTO_COUNT = 19;
-    private List<Photo> selectedPhotoList;
+
+    private List<PickedPhoto> selectedPhotoList;
     private ImageRecyclerAdapter imageRecyclerAdapter;
 
     private String path;
     private String folderName;
+    public static int maxPhotos = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +71,11 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
             path = savedInstanceState.getString("path");
             folderName = savedInstanceState.getString("folderName");
 
-            selectedPhotoList = (List<Photo>) savedInstanceState.getSerializable("selectedPhotoList");
+            selectedPhotoList = (List<PickedPhoto>) savedInstanceState.getSerializable("selectedPhotoList");
         } else {
             Bundle bundle = this.getIntent().getBundleExtra("pathBundle");
             path = bundle.getString("path");
-
+            maxPhotos = bundle.getInt("maxPhotos");
             folderName = bundle.getString("folderName");
             selectedPhotoList = new ArrayList<>();
         }
@@ -165,7 +163,7 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
     }
 
     private void addToList(String picturePath) {
-        if (selectedPhotoList.size() > MAX_PHOTO_COUNT) {
+        if (selectedPhotoList.size() >= maxPhotos) {
             return;
         }
 
@@ -187,7 +185,7 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        selectedPhotoList.add(new Photo(latitude, longitude
+        selectedPhotoList.add(new PickedPhoto(latitude, longitude
                 , picturePath, milliSeconds));
 
 
