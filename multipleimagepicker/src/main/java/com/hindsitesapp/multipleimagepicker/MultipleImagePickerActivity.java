@@ -39,10 +39,13 @@ public class MultipleImagePickerActivity extends AppCompatActivity {
         if (showToolbar) {
 
             toolbar.setTitle("Select folder");
-            setSupportActionBar(toolbar);
+            if (getSupportActionBar() == null) {
+                setSupportActionBar(toolbar);
+            }
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
+
 
         } else {
             toolbar.setVisibility(View.GONE);

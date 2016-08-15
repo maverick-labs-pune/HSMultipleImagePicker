@@ -95,10 +95,13 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
         if(showToolbar) {
 
             toolbar.setTitle("Select Photos");
-            setSupportActionBar(toolbar);
+            if (getSupportActionBar() == null) {
+                setSupportActionBar(toolbar);
+            }
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
+
         } else {
             toolbar.setVisibility(View.GONE);
             if (getSupportActionBar() != null) {
