@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +64,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         for (Image image: selectedImageList) {
             selectedImages.put(image.position, true);
         }
-        Log.d("TAG", "Selected images array " + selectedImages);
     }
 
     @Override
@@ -80,7 +78,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     public void onBindViewHolder(ImageRecyclerViewHolder holder, int position) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimension, dimension);
         holder.image.setLayoutParams(layoutParams);
-        Log.d("TAG", "  position " + position + "  selected " + selectedImages);
         if(selectedImages.get(position,false)) {
             holder.image.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
             holder.imageOverlay.setVisibility(View.VISIBLE);

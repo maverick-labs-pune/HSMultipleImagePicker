@@ -37,7 +37,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,7 +78,6 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
             showToolbar = savedInstanceState.getBoolean("showToolbar");
             selectedImageList = (List<Image>) savedInstanceState.getSerializable("selectedImageList");
 
-            Log.d("TAG" , " selected images" + selectedImageList.size());
             maxPhotos = savedInstanceState.getInt("maxPhotos");
         } else {
             Bundle bundle = this.getIntent().getBundleExtra("pathBundle");

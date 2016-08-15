@@ -63,10 +63,14 @@ public class MainActivity extends AppCompatActivity {
                         public void onImagesPicked(List<PickedPhoto> pickedPhotos) {
 
                             //Get all the picked photos here . Type of photo is PickedPhoto
-                            for(int i=0; i < pickedPhotos.size(); i++) {
-                                PickedPhoto photo = pickedPhotos.get(i);
+                            for (PickedPhoto photo : pickedPhotos) {
                                 Log.d("TAG", " In main activity " + photo.getPhotoPath());
 
+                                //You can also get these values from the picked photos.
+
+                                //photo.getLatitude();
+                                //photo.getLongitude();
+                                //photo.getClickedDateTime();
                             }
                         }
                     })
