@@ -21,13 +21,16 @@
 
 package com.hindsitesapp.multipleimagepicker;
 
+import java.io.Serializable;
+
 /**
  * Created by Authoritah on 2/11/2015.
  */
-public class Image {
+public class Image implements Serializable {
     public String path;
     public String name;
     public long time;
+    public int position;
 
     public Image(String path, String name, long time){
         this.path = path;

@@ -37,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,27 +62,32 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
 
     private List<PickedPhoto> selectedPhotoList;
     private ImageRecyclerAdapter imageRecyclerAdapter;
-
+    private String folderPath;
     private String path;
     private String folderName;
-    public static int maxPhotos = 20;
+    public static int maxPhotos;
     private boolean showToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        List<Image> selectedImageList;
         if (savedInstanceState != null) {
             path = savedInstanceState.getString("path");
             folderName = savedInstanceState.getString("folderName");
+            folderPath = savedInstanceState.getString("folderPath");
             showToolbar = savedInstanceState.getBoolean("showToolbar");
-            selectedPhotoList = (List<PickedPhoto>) savedInstanceState.getSerializable("selectedPhotoList");
+            selectedImageList = (List<Image>) savedInstanceState.getSerializable("selectedImageList");
+
+            Log.d("TAG" , " selected images" + selectedImageList.size());
+            maxPhotos = savedInstanceState.getInt("maxPhotos");
         } else {
             Bundle bundle = this.getIntent().getBundleExtra("pathBundle");
             path = bundle.getString("path");
-            maxPhotos = bundle.getInt("maxPhotos");
             showToolbar = bundle.getBoolean("showToolbar");
             folderName = bundle.getString("folderName");
-            selectedPhotoList = new ArrayList<>();
+            selectedImageList = new ArrayList<>();
+            maxPhotos = bundle.getInt("maxPhotos");
         }
         setContentView(R.layout.activity_hindsites_custom_gallery);
 
@@ -112,23 +118,15 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
         imageRecyclerAdapter = new ImageRecyclerAdapter(getApplicationContext(), new OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(int selectedCount) {
-                ActionBar supportActionBar = getSupportActionBar();
-                if (supportActionBar != null) {
-                    switch (selectedCount) {
-                        case 0:
-                            supportActionBar.setTitle("No photos selected");
-                            break;
-                        case 1:
-                            supportActionBar.setTitle("1 photo selected");
-                            break;
-                        default:
-                            supportActionBar.setTitle(selectedCount + " photos selected");
-                            break;
-                    }
-                }
+                setToolbarTitle(selectedCount);
             }
         });
         recyclerView.setAdapter(imageRecyclerAdapter);
+        if(selectedImageList.size() > 0) {
+            imageRecyclerAdapter.setSelectedImages(selectedImageList);
+            setToolbarTitle(selectedImageList.size());
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString("path", path);
         this.getSupportLoaderManager().initLoader(0, bundle, mLoaderCallback);
@@ -136,16 +134,34 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
 
     }
 
+    private void setToolbarTitle(int selectedCount) {
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            switch (selectedCount) {
+                case 0:
+                    supportActionBar.setTitle("No photos selected");
+                    break;
+                case 1:
+                    supportActionBar.setTitle("1 photo selected");
+                    break;
+                default:
+                    supportActionBar.setTitle(selectedCount + " photos selected");
+                    break;
+            }
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString("path", path);
+        outState.putString("folderPath", folderPath);
         outState.putString("folderName", folderName);
         outState.putInt("maxPhotos", maxPhotos);
         outState.putBoolean("showToolbar", showToolbar);
 
-        outState.putSerializable("selectedPhotoList", (Serializable) selectedPhotoList);
+        outState.putSerializable("selectedImageList", (Serializable) imageRecyclerAdapter.getSelectedImages());
     }
 
     @Override
@@ -182,7 +198,7 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
     }
 
     private void addToList(String picturePath) {
-        if (selectedPhotoList.size() >= maxPhotos) {
+        if (maxPhotos != -1 && selectedPhotoList.size() >= maxPhotos) {
             return;
         }
 
@@ -222,12 +238,13 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
-        private String folderPath;
+
         private final String[] IMAGE_PROJECTION = {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media._ID};
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.SIZE};
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -254,11 +271,14 @@ public class HindSitesCustomImageGalleryActivity extends AppCompatActivity {
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-                        File imageFile = new File(path);
-                        File folderFile = imageFile.getParentFile();
-                        if (folderPath.equals(folderFile.getAbsolutePath())) {
-                            Image image = new Image(path, name, dateTime);
-                            images.add(image);
+                        long size = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
+                        if (size > 0) {
+                            File imageFile = new File(path);
+                            File folderFile = imageFile.getParentFile();
+                            if (folderPath.equals(folderFile.getAbsolutePath())) {
+                                Image image = new Image(path, name, dateTime);
+                                images.add(image);
+                            }
                         }
                     } while (data.moveToNext());
                     imageRecyclerAdapter.setData(images);

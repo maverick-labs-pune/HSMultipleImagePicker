@@ -1,12 +1,11 @@
 package com.hindsitesapp.moduletest;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.widget.Button;
 
 import com.hindsitesapp.multipleimagepicker.MultiImagePicker;
 import com.hindsitesapp.multipleimagepicker.MultiImagePickerListener;
-import com.hindsitesapp.multipleimagepicker.OnRecyclerItemClickListener;
 import com.hindsitesapp.multipleimagepicker.PickedPhoto;
 
 import java.util.List;
@@ -44,19 +42,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectPhotos() {
 
+        //For supporting api > 23, need to check permission to read external storage.
         if(checkPermission() == PackageManager.PERMISSION_GRANTED) {
-            int maxPhotos = 2;
-            multiImagePicker = new MultiImagePicker.Builder(maxPhotos)
-                    // If your theme is NoActionBar or you are hiding the bar in your activity,
-                    // set this to true. Default is false.
+            int maxPhotos = 10;
+
+            multiImagePicker = new MultiImagePicker.Builder()
+
+                    //Maximum number of photos that user is allowed to select. By default, there is no limit
+                    .setMaxPhotos(maxPhotos)
+
+                    // If your theme is NoActionBar - as in this sample app or you are hiding the bar in your activity,
+                    // set this option to true in order to show a toolbar at the top.
+                    // Toolbar will follow your app theme.
+                    // Default is false.
                     .showSeparateToolbar(true)
 
                     //Receiver to get all the selected photos
                     .setOnReceiveListener(new MultiImagePickerListener() {
                         @Override
                         public void onImagesPicked(List<PickedPhoto> pickedPhotos) {
-                            //Get all the picked photos here . Type of photo is PickedPhoto
 
+                            //Get all the picked photos here . Type of photo is PickedPhoto
                             for(int i=0; i < pickedPhotos.size(); i++) {
                                 PickedPhoto photo = pickedPhotos.get(i);
                                 Log.d("TAG", " In main activity " + photo.getPhotoPath());
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestPermission() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_CONTACTS)
+                Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?

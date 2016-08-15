@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,13 +52,20 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     /**
      */
     public void setData(List<Image> images) {
-        clearSelections();
+        //clearSelections();
         if (images != null && images.size() > 0) {
             mImages = images;
         } else {
             mImages.clear();
         }
         notifyDataSetChanged();
+    }
+
+    public void setSelectedImages(List<Image> selectedImageList) {
+        for (Image image: selectedImageList) {
+            selectedImages.put(image.position, true);
+        }
+        Log.d("TAG", "Selected images array " + selectedImages);
     }
 
     @Override
@@ -72,6 +80,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     public void onBindViewHolder(ImageRecyclerViewHolder holder, int position) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimension, dimension);
         holder.image.setLayoutParams(layoutParams);
+        Log.d("TAG", "  position " + position + "  selected " + selectedImages);
         if(selectedImages.get(position,false)) {
             holder.image.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
             holder.imageOverlay.setVisibility(View.VISIBLE);
@@ -89,6 +98,8 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         final int position = holder.getAdapterPosition();
         if (thumbnailHashMap.containsKey(position)) {
             final Image image = mImages.get(position);
+            image.position = position;
+            mImages.set(position, image);
             GlideDrawableImageViewTarget glideDrawableImageViewTarget
                     = thumbnailHashMap.get(position);
 
@@ -154,7 +165,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         if (selectedImages.get(pos, false)) {
             selectedImages.delete(pos);
         } else {
-            if(getSelectedItemCount() >= HindSitesCustomImageGalleryActivity.maxPhotos){
+            if(HindSitesCustomImageGalleryActivity.maxPhotos != -1 && getSelectedItemCount() >= HindSitesCustomImageGalleryActivity.maxPhotos){
                 Toast.makeText(mContext, "Maximum " + HindSitesCustomImageGalleryActivity.maxPhotos +" photos can be selected", Toast.LENGTH_LONG).show();
             } else {
                 selectedImages.put(pos, true);

@@ -21,11 +21,16 @@ public class MultiImagePicker {
 
     public static class Builder {
 
-        private int maxPhotos;
+        private int maxPhotos = -1;
         private boolean showToolbar;
 
-        public Builder(int maxPhotos) {
+        public Builder() {
+
+        }
+
+        public Builder setMaxPhotos(int maxPhotos) {
             this.maxPhotos = maxPhotos;
+            return this;
         }
 
         public Builder showSeparateToolbar(boolean showToolbar) {
