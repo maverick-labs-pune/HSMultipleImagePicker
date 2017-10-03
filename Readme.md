@@ -27,8 +27,9 @@ Add this to your root build.gradle
         }
    }
    dependencies {
-        compile 'com.github.vishakhadamle:HSMultipleImagePicker:1.0.1'
+	   compile 'com.github.maverick-labs-pune:HSMultipleImagePicker:1.0.1'
    }
+
 ```
 
 Add this code where you want to add the image picker -
