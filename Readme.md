@@ -1,4 +1,4 @@
-##Synopsis
+## Synopsis
 
 HSMultipleImagePicker is a library for Android which allows you to pick multiple images from the phone. It follows the Material Design specs and will fit right into your new Material app. The design has been inspired by the WhatsApp Image Picker.
 
@@ -11,7 +11,7 @@ HSMultipleImagePicker was designed for HindSites app.
 HindSites :
 https://play.google.com/store/apps/details?id=com.hindsitesapp.hindsites
 
-##UI
+## UI
 
 ![Demo](Screenshot_20160816-131736.png)      ![Demo](Screenshot_20160816-131725.png)
 
