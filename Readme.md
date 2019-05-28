@@ -15,7 +15,7 @@ https://play.google.com/store/apps/details?id=com.hindsitesapp.hindsites
 
 ![Demo](Screenshot_20160816-131736.png)      ![Demo](Screenshot_20160816-131725.png)
 
-##Code Example
+## Code Example
 
 Add this to your root build.gradle
 
